@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center;">
+  {% for concert in concerts %}
+    <div style="background-color: #111; border: 2px solid #8e44ad; border-radius: 15px; padding: 20px; width: 280px; box-shadow: 0 0 15px rgba(142, 68, 173, 0.4);">
+      <img src="{{ url_for('static', filename='posters/' + concert[6]) }}" alt="Concert Poster" style="width: 100%; height: auto; border-radius: 10px; margin-bottom: 15px;">
+      <h3 style="color: white; font-size: 20px; margin-bottom: 5px;">{{ concert[1] }} by {{ concert[2] }}</h3>
+      <p style="color: #ccc; font-size: 14px; margin-bottom: 20px;">{{ concert[4] }} @ {{ concert[3] }}</p>
+      <a href="/book/{{ concert[0] }}">
+        <button style="width: 100%; padding: 12px; border: none; border-radius: 25px; background: linear-gradient(135deg, #8e44ad, #e91e63); color: white; font-weight: bold; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease;">
+          Book Now
+        </button>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

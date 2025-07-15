@@ -1,0 +1,268 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f1a;
+  color: white;
+  /* Remove the flex centering from body - it was preventing header from showing */
+}
+
+/* Only apply flex centering to login/register pages */
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-box {
+  display: flex;
+  width: 800px;
+  height: auto;
+  background: #000;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 0 40px rgba(128, 0, 128, 0.5);
+  border: 2px solid #8e44ad;
+  flex-wrap: wrap;
+}
+
+.login-left, .login-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 50px;
+  box-sizing: border-box;
+}
+
+.login-left {
+  background: #000;
+  color: white;
+}
+
+.login-right {
+  background: linear-gradient(135deg, #8e44ad, #000);
+  color: white;
+  text-align: center;
+}
+
+/* REGISTER PAGE - Reverse Layout */
+.login-box.reverse-layout .login-left {
+  background: linear-gradient(135deg, #8e44ad, #000);
+  text-align: center;
+}
+
+.login-box.reverse-layout .login-right {
+  background: #000;
+}
+
+/* Override with specific classes */
+.welcome-purple {
+  background: linear-gradient(135deg, #8e44ad, #000) !important;
+  color: white !important;
+  text-align: center !important;
+}
+
+.register-dark {
+  background: #000 !important;
+  color: white !important;
+}
+
+/* Form styles */
+h2 {
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #aaa;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 2px solid #333;
+  background: #111;
+  color: white;
+  font-size: 16px;
+  transition: 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #8e44ad;
+  background: #1a1a1a;
+}
+
+.form-group input::placeholder {
+  color: #666;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #8e44ad, #000);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(142, 68, 173, 0.5);
+}
+
+.alt-link {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.alt-link a {
+  color: #e91e63;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.alt-link a:hover {
+  text-decoration: underline;
+}
+
+/* Welcome section */
+h1 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.login-right p, .login-left p {
+  font-size: 16px;
+  line-height: 1.6;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+/* Login redirect link (for register page) */
+.login-redirect {
+  display: inline-block;
+  padding: 12px 30px;
+  border: 2px solid white;
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: transparent;
+  margin-top: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.login-redirect:hover {
+  background: white;
+  color: #8e44ad;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Dashboard and other pages styles */
+.concerts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 20px 0;
+}
+
+.concert-card {
+  background: linear-gradient(135deg, #1a1a2e, #2d2d5a);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid #8e44ad;
+  transition: all 0.3s ease;
+}
+
+.concert-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(142, 68, 173, 0.3);
+}
+
+.concert-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.concert-card h3 {
+  color: #d3adf7;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.concert-card p {
+  color: #ccc;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.book-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #8e44ad, #e91e63);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.book-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .login-box {
+    width: 95%;
+    flex-direction: column;
+  }
+
+  .login-left, .login-right {
+    padding: 30px;
+  }
+
+  .concerts-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

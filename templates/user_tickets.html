@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+{% if tickets %}
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; background: #111; border-radius: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(142, 68, 173, 0.3);">
+      <thead style="background: linear-gradient(135deg, #8e44ad, #e91e63); color: white;">
+        <tr>
+          <th style="padding: 12px; text-align: left;">Order #</th>
+          <th style="padding: 12px; text-align: left;">Concert</th>
+          <th style="padding: 12px; text-align: left;">Category</th>
+          <th style="padding: 12px; text-align: left;">Seat</th>
+          <th style="padding: 12px; text-align: left;">Price</th>
+          <th style="padding: 12px; text-align: left;">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for oid, ts, cname, cat, label, price in tickets %}
+        <tr style="border-bottom: 1px solid #333;">
+          <td style="padding: 12px; color: white;">{{ oid }}</td>
+          <td style="padding: 12px; color: white;">{{ cname }}</td>
+          <td style="padding: 12px; color: #d3adf7;">{{ cat }}</td>
+          <td style="padding: 12px; color: #d3adf7;">{{ label }}</td>
+          <td style="padding: 12px; color: #2ecc71;">₱{{ price }}</td>
+          <td style="padding: 12px; color: #ccc;">{{ ts }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p style="text-align: center; color: #aaa;">You haven't bought any tickets yet.</p>
+{% endif %}
+
+{% endblock %}

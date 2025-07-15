@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen bg-[#0f0f1a] text-white px-6 py-10">
+  <h2 class="text-4xl font-bold mb-8 text-center text-[#d3adf7]">🎤 All Concerts</h2>
+
+  <div class="overflow-x-auto">
+    <table class="table-auto w-full text-left border-collapse border border-[#444] rounded-lg overflow-hidden shadow-md">
+      <thead class="bg-[#1a1a2e]">
+        <tr>
+          <th class="border border-[#444] px-4 py-3">Name</th>
+          <th class="border border-[#444] px-4 py-3">Artist</th>
+          <th class="border border-[#444] px-4 py-3">Date</th>
+          <th class="border border-[#444] px-4 py-3">Location</th>
+          <th class="border border-[#444] px-4 py-3">Layout</th>
+          <th class="border border-[#444] px-4 py-3">Status</th>
+          <th class="border border-[#444] px-4 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in concerts %}
+        <tr class="bg-[#16213e] hover:bg-[#1a1a2e] transition duration-200">
+          <td class="border border-[#444] px-4 py-2">{{ c[1] }}</td>
+          <td class="border border-[#444] px-4 py-2">{{ c[2] }}</td>
+          <td class="border border-[#444] px-4 py-2">{{ c[3] }}</td>
+          <td class="border border-[#444] px-4 py-2">{{ c[4] }}</td>
+          <td class="border border-[#444] px-4 py-2">Layout {{ c[5] }}</td>
+          <td class="border border-[#444] px-4 py-2">
+            {% if c[6] == 'done' %}
+              <span class="text-green-400 font-semibold">✔ Done</span>
+            {% else %}
+              <span class="text-yellow-400 font-semibold">⏳ Upcoming</span>
+            {% endif %}
+          </td>
+          <td class="border border-[#444] px-4 py-2 space-x-2">
+            <a href="/admin/edit_concert/{{ c[0] }}"
+               class="bg-yellow-400 hover:bg-yellow-300 text-black font-semibold px-3 py-1 rounded transition">✏ Edit</a>
+
+            {% if c[6] != 'done' %}
+            <form action="/admin/mark_done/{{ c[0] }}" method="POST" class="inline">
+              <button type="submit"
+                      onclick="return confirm('Mark this concert as done?')"
+                      class="bg-green-500 hover:bg-green-400 text-black font-semibold px-3 py-1 rounded transition">✔ Mark Done</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-8 text-center">
+    <a href="/admin/dashboard" class="text-blue-400 hover:underline text-lg">← Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

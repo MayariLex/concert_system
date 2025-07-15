@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-[#0f0f1a] text-white p-6">
+  <div class="bg-[#1a1a2e] p-10 rounded-2xl w-full max-w-4xl shadow-2xl border border-purple-700">
+    <h2 class="text-4xl font-extrabold mb-10 text-center text-purple-300 uppercase tracking-wide">
+      ➕ Add New Concert
+    </h2>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-8">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <input type="text" name="name" placeholder="🎤 Concert Name" required
+               class="w-full p-4 rounded-lg text-black placeholder-gray-500 focus:outline-none shadow-md">
+
+        <input type="text" name="artist" placeholder="👨‍🎤 Artist" required
+               class="w-full p-4 rounded-lg text-black placeholder-gray-500 focus:outline-none shadow-md">
+
+        <input type="date" name="date" required
+               class="w-full p-4 rounded-lg text-black focus:outline-none shadow-md">
+
+        <input type="text" name="location" placeholder="📍 Location" required
+               class="w-full p-4 rounded-lg text-black placeholder-gray-500 focus:outline-none shadow-md">
+      </div>
+
+      <div>
+        <label class="block mb-3 font-semibold text-purple-300 text-lg">🎯 Choose Layout</label>
+        <select name="layout" id="layout" onchange="generateFields()" required
+                class="w-full p-4 rounded-lg text-black focus:outline-none shadow-md">
+          <option value="">Select layout</option>
+          <option value="1">Layout 1</option>
+          <option value="2">Layout 2</option>
+          <option value="3">Layout 3</option>
+          <option value="4">Layout 4</option>
+        </select>
+      </div>
+
+      <div id="categories-container" class="space-y-5 mt-6"></div>
+
+      <div>
+        <label class="block mb-3 font-semibold text-purple-300 text-lg">🖼️ Upload Poster</label>
+        <input type="file" name="poster" accept="image/*" required
+               class="w-full p-4 rounded-lg bg-white text-black focus:outline-none shadow-md">
+      </div>
+
+      <div class="text-center pt-6">
+        <button type="submit"
+                class="bg-gradient-to-r from-purple-600 to-pink-500 hover:opacity-90 transition px-12 py-4 rounded-full text-white font-bold text-lg tracking-wide shadow-lg">
+          ➕ Add Concert
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const layouts = {
+    1: ["VVIP", "VIP", "Patron A", "Patron B", "General Admission"],
+    2: ["Floor Standing", "VIP Standing", "Lower Box", "Upper Box", "General Admission"],
+    3: ["VVIP", "VIP Seated", "Gold", "Silver", "Bronze"],
+    4: ["VIP PEAT", "Patron A", "Patron B", "Upper Box A", "Upper Box B"]
+  };
+
+  function generateFields() {
+    const layout = document.getElementById("layout").value;
+    const container = document.getElementById("categories-container");
+    container.innerHTML = "";
+
+    if (layouts[layout]) {
+      layouts[layout].forEach(cat => {
+        const safeCat = cat.replace(/\s+/g, '_');
+        container.innerHTML += `
+          <div class="flex flex-col md:flex-row md:items-center gap-4 bg-[#2b2b55] p-4 rounded-xl shadow-inner">
+            <label class="md:w-1/4 font-semibold text-purple-200">${cat}</label>
+            <input type="number" name="price_${safeCat}" min="0" placeholder="₱ Price"
+                   required class="p-3 rounded-md text-black w-full md:w-1/3 placeholder-gray-500 shadow-md">
+            <input type="number" name="count_${safeCat}" min="1" placeholder="🎫 Seat Count"
+                   required class="p-3 rounded-md text-black w-full md:w-1/3 placeholder-gray-500 shadow-md">
+          </div>
+        `;
+      });
+    }
+  }
+</script>
+{% endblock %}

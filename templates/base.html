@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Online Concert Ticket System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: white;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1a2e, #2d2d5a);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 700;
+      color: #d3adf7;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: #d3adf7;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 20px;
+    }
+
+    .nav-links a:hover {
+      color: white;
+      background: rgba(211, 173, 247, 0.1);
+    }
+
+    .nav-links a.active {
+      background: linear-gradient(135deg, #8e44ad, #e91e63);
+      color: white;
+    }
+
+    .page-title {
+      text-align: center;
+      padding: 40px 0;
+      background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
+    }
+
+    .page-title h1 {
+      font-size: 36px;
+      font-weight: 300;
+      margin: 0;
+      color: #d3adf7;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .alert {
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border-left: 5px solid;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: 500;
+    }
+
+    .alert-success {
+      background-color: rgba(46, 204, 113, 0.1);
+      color: #2ecc71;
+      border-left-color: #2ecc71;
+    }
+
+    .alert-danger {
+      background-color: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      border-left-color: #e74c3c;
+    }
+
+    .alert-info {
+      background-color: rgba(52, 152, 219, 0.1);
+      color: #3498db;
+      border-left-color: #3498db;
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .page-title h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+{% if not (request.path == '/login' or request.path == '/register') %}
+<header>
+  <div class="header-content">
+    <a href="{{ url_for('user_dashboard') if session.get('role') == 'user' else url_for('admin_dashboard') if session.get('role') == 'admin' else '/' }}" class="logo">
+      ConcertTix
+    </a>
+    <nav class="nav-links">
+      {% if session.get('user_id') %}
+        {% if session.get('role') == 'admin' %}
+          <a href="/admin/dashboard" {% if 'admin/dashboard' in request.path %}class="active"{% endif %}>Dashboard</a>
+          <a href="/admin/add_concert" {% if 'add_concert' in request.path %}class="active"{% endif %}>Add New Concert</a>
+        {% elif session.get('role') == 'user' %}
+          <a href="/user/dashboard" {% if 'user/dashboard' in request.path %}class="active"{% endif %}>Dashboard</a>
+          <a href="/user/tickets" {% if 'user/tickets' in request.path %}class="active"{% endif %}>My Tickets</a>
+        {% endif %}
+        <a href="/logout">Logout ({{ session['username'] }})</a>
+      {% else %}
+        <a href="/login" {% if request.path == '/login' %}class="active"{% endif %}>Login</a>
+        <a href="/register" {% if request.path == '/register' %}class="active"{% endif %}>Register</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+{% if request.endpoint == 'user_dashboard' %}
+<div class="page-title"><h1>Available Concerts</h1></div>
+{% elif request.endpoint == 'user_tickets' %}
+<div class="page-title"><h1>My Tickets</h1></div>
+{% elif request.endpoint == 'admin_dashboard' %}
+<div class="page-title"><h1>Admin Dashboard</h1></div>
+{% elif request.endpoint == 'admin_concerts' %}
+<div class="page-title"><h1>All Concerts</h1></div>
+{% elif request.endpoint == 'add_concert' %}
+<div class="page-title"><h1>Add New Concert</h1></div>
+{% endif %}
+{% endif %}
+
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}
+  {% endblock %}
+</div>
+
+</body>
+</html>

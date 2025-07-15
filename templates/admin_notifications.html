@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🔔 Purchase Notifications</h2>
+{% if notifications %}
+<table border="1" cellpadding="8">
+  <tr>
+    <th>#</th>
+    <th>User</th>
+    <th>Concert</th>
+    <th>Time</th>
+  </tr>
+  {% for nid, uname, concert, time in notifications %}
+  <tr>
+    <td>{{ nid }}</td>
+    <td>{{ uname }}</td>
+    <td>{{ concert }}</td>
+    <td>{{ time }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+  <p>No notifications yet.</p>
+{% endif %}
+{% endblock %}
