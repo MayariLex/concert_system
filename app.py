@@ -137,17 +137,17 @@ def add_concert():
         }
 
         for cat in layouts.get(layout, []):
-            price = request.form.get(f"price_{cat}")
-            seat_count = request.form.get(f"count_{cat}")
+            safe_cat = cat.replace(" ", "_")
+            price = request.form.get(f"price_{safe_cat}")
+            seat_count = request.form.get(f"count_{safe_cat}")
 
             if price and seat_count:
                 cur.execute("INSERT INTO categories (name, price, concert_id) VALUES (%s, %s, %s)",
                             (cat, price, concert_id))
                 category_id = cur.lastrowid
 
-                # Generate custom number of seats based on admin input
                 for i in range(1, int(seat_count) + 1):
-                    label = f"{cat[:1]}{i}"
+                    label = f"{safe_cat}_{i}"  # More descriptive label
                     cur.execute(
                         "INSERT INTO seats (label, category_id, concert_id, status) VALUES (%s, %s, %s, 'available')",
                         (label, category_id, concert_id))
@@ -158,6 +158,7 @@ def add_concert():
         return redirect('/admin/dashboard')
 
     return render_template('add_concert.html')
+
 
 # ==================== BOOK SEATS ====================
 @app.route('/book/<int:concert_id>')
