@@ -183,6 +183,8 @@ def book_seats(concert_id):
 
     categories = {}
     prices = {}
+    categories_json = {}  # New JSON-safe version
+
     for cat_id, cat_name, price in category_data:
         prices[cat_id] = price
         cur.execute("""
@@ -192,14 +194,23 @@ def book_seats(concert_id):
             ORDER BY label
         """, (cat_id, concert_id))
         seat_list = cur.fetchall()
+
+        # Original structure with tuple keys (for Jinja2 template loops)
         categories[(cat_id, cat_name)] = seat_list
+
+        # JSON-safe structure with string keys (for JavaScript)
+        categories_json[str(cat_id)] = {
+            'name': cat_name,
+            'seats': seat_list
+        }
 
     cur.close()
 
     return render_template('book_seats.html',
                            concert=concert,
                            concert_id=concert_id,
-                           categories=categories,
+                           categories=categories,  # Keep for template loops
+                           categories_json=categories_json,  # New for JavaScript
                            prices=prices)
 
 # ==================== PURCHASE SEATS ====================

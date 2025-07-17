@@ -3,8 +3,24 @@
 
 <h2 class="text-center mb-4" style="color: #d3adf7;">Book Seats for {{ concert[0] }}</h2>
 
-<div class="text-center mb-4">
-  <img src="{{ url_for('static', filename='posters/' + concert[1]) }}" width="300">
+<div class="poster-layout-container">
+  <!-- Concert Poster -->
+  <div class="poster-section">
+    <img src="{{ url_for('static', filename='posters/' + concert[1]) }}" width="390">
+  </div>
+
+  <!-- Visual Seat Layout -->
+  <div class="layout-section">
+    <h5 class="text-center mb-3" style="color: #d3adf7;">Venue Layout</h5>
+
+    <!-- Mini Stage -->
+    <div class="mini-stage">STAGE</div>
+
+    <!-- Visual seat arrangement - dynamically populated -->
+    <div class="venue-layout" id="venue-layout">
+      <!-- Will be populated by JavaScript based on layout -->
+    </div>
+  </div>
 </div>
 
 <!-- Legend -->
@@ -15,7 +31,7 @@
 </div>
 
 <!-- Stage -->
-<div class="stage">STAGE</div>
+
 
 <form method="POST" action="{{ url_for('purchase', concert_id=concert_id) }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -38,9 +54,12 @@
             <button type="button" class="seat-btn {% if seat[2] == 'sold' %}sold{% else %}available{% endif %}"
                     data-id="{{ seat[0] }}"
                     data-label="{{ seat[1] }}"
+                    data-section="{{ cat_name }}"
+                    data-index="{{ loop.index0 }}"
+                    data-total="{{ seats|length }}"
                     data-price="{{ prices[cat_id] }}"
                     {% if seat[2] == 'sold' %}disabled{% endif %}>
-              {{ seat[1] }}
+              <span class="seat-code">{{ seat[1] }}</span>
             </button>
             {% endfor %}
           </div>
@@ -67,6 +86,251 @@
   body {
     background-color: #000 !important;
     color: #fff;
+  }
+
+  /* Poster and Layout Container */
+  .poster-layout-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .poster-section {
+    flex: 0 0 auto;
+  }
+
+  .layout-section {
+    flex: 0 0 auto;
+    min-width: 250px;
+    max-width: 300px;
+  }
+
+  /* Mini Stage */
+  .mini-stage {
+    background: linear-gradient(135deg, #8e44ad, #e91e63);
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    box-shadow: 0 0 8px rgba(142, 68, 173, 0.4);
+  }
+
+  /* Venue Layout */
+  .venue-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .section-visual {
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 10px;
+    position: relative;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #d3adf7;
+    text-align: center;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .seat-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .seat-row {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+  }
+
+  .mini-seat {
+    width: 12px;
+    height: 12px;
+    background-color: #666;
+    border-radius: 2px;
+    display: inline-block;
+    border: 1px solid #999;
+    transition: all 0.2s ease;
+  }
+
+  .mini-seat.sold {
+    background-color: #e74c3c !important;
+    border-color: #c0392b !important;
+    opacity: 0.7;
+  }
+
+  /* Section-specific styling */
+  .section-vvip {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 193, 7, 0.15));
+    border-color: #ffd700;
+  }
+  .section-vvip .mini-seat {
+    background-color: #ffd700;
+    border-color: #ffed4e;
+  }
+
+  .section-vip, .section-vip-seated {
+    background: linear-gradient(135deg, rgba(255, 99, 71, 0.1), rgba(255, 69, 0, 0.1));
+    border-color: #ff6347;
+  }
+  .section-vip .mini-seat, .section-vip-seated .mini-seat {
+    background-color: #ff6347;
+    border-color: #ff7f50;
+  }
+
+  .section-patron-a {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+    border-color: #2ecc71;
+  }
+  .section-patron-a .mini-seat {
+    background-color: #2ecc71;
+    border-color: #58d68d;
+  }
+
+  .section-patron-b {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1));
+    border-color: #3498db;
+  }
+  .section-patron-b .mini-seat {
+    background-color: #3498db;
+    border-color: #5dade2;
+  }
+
+  .section-general-admission {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
+    border-color: #9b59b6;
+  }
+  .section-general-admission .mini-seat {
+    background-color: #9b59b6;
+    border-color: #af7ac5;
+  }
+
+  .section-floor-standing {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
+    border-color: #e74c3c;
+  }
+  .section-floor-standing .mini-seat {
+    background-color: #e74c3c;
+    border-color: #ec7063;
+  }
+
+  .section-vip-standing {
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.1), rgba(211, 84, 0, 0.1));
+    border-color: #e67e22;
+  }
+  .section-vip-standing .mini-seat {
+    background-color: #e67e22;
+    border-color: #f39c12;
+  }
+
+  .section-lower-box {
+    background: linear-gradient(135deg, rgba(26, 188, 156, 0.1), rgba(22, 160, 133, 0.1));
+    border-color: #1abc9c;
+  }
+  .section-lower-box .mini-seat {
+    background-color: #1abc9c;
+    border-color: #48c9b0;
+  }
+
+  .section-upper-box, .section-upper-box-a, .section-upper-box-b {
+    background: linear-gradient(135deg, rgba(52, 73, 94, 0.1), rgba(44, 62, 80, 0.1));
+    border-color: #34495e;
+  }
+  .section-upper-box .mini-seat, .section-upper-box-a .mini-seat, .section-upper-box-b .mini-seat {
+    background-color: #34495e;
+    border-color: #5d6d7e;
+  }
+
+  .section-gold {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(218, 165, 32, 0.1));
+    border-color: #daa520;
+  }
+  .section-gold .mini-seat {
+    background-color: #daa520;
+    border-color: #f1c40f;
+  }
+
+  .section-silver {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.1), rgba(169, 169, 169, 0.1));
+    border-color: #c0c0c0;
+  }
+  .section-silver .mini-seat {
+    background-color: #c0c0c0;
+    border-color: #d5d5d5;
+  }
+
+  .section-bronze {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(184, 115, 51, 0.1));
+    border-color: #cd7f32;
+  }
+  .section-bronze .mini-seat {
+    background-color: #cd7f32;
+    border-color: #d2691e;
+  }
+
+  .section-vip-peat {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.1));
+    border-color: #ffd700;
+  }
+  .section-vip-peat .mini-seat {
+    background-color: #ffd700;
+    border-color: #ffed4e;
+  }
+
+  /* Standing sections styling */
+  .section-standing {
+    padding: 15px;
+    text-align: center;
+  }
+
+  .section-standing .standing-area {
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.05) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    border-radius: 6px;
+    padding: 20px;
+    margin: 5px 0;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+  }
+
+  .section-standing .standing-text {
+    font-size: 10px;
+    color: #ccc;
+    font-style: italic;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .poster-layout-container {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .layout-section {
+      min-width: 200px;
+      max-width: 250px;
+    }
   }
 
   .accordion-item.bg-dark {
@@ -96,16 +360,20 @@
   }
 
   .seat-btn {
-    width: 42px;
+    width: 56px;
     height: 42px;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 11px;
     font-weight: bold;
     border: 1px solid #555;
     background: #222;
     color: white;
     transition: all 0.2s ease;
     cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .seat-btn.available { background-color: #444; }
@@ -113,8 +381,15 @@
   .seat-btn.selected { background-color: #2ecc71; color: white; }
 
   .seat-btn:hover:not(.sold):not(.selected) {
-    transform: scale(1.1);
+    transform: scale(1.05);
     border-color: #8e44ad;
+  }
+
+  .seat-code {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
   }
 
   .stage {
@@ -165,9 +440,212 @@
 
 <!-- JavaScript -->
 <script>
+  // Generate code-based seat names
+  function generateSeatCode(sectionName, seatIndex, totalSeats) {
+    // Define section codes based on section names
+    const sectionCodes = {
+      'vvip': 'VV',
+      'vip peat': 'VP',
+      'vip seated': 'VS',
+      'vip standing': 'VT',
+      'vip': 'V',
+      'floor standing': 'FS',
+      'patron a': 'PA',
+      'patron b': 'PB',
+      'gold': 'G',
+      'silver': 'S',
+      'bronze': 'B',
+      'lower box': 'LB',
+      'upper box a': 'UBA',
+      'upper box b': 'UBB',
+      'upper box': 'UB',
+      'general admission': 'GA'
+    };
+
+    // Get section code
+    const normalizedSection = sectionName.toLowerCase();
+    let sectionCode = 'GEN'; // Default code
+
+    // Find matching section code
+    for (const [key, code] of Object.entries(sectionCodes)) {
+      if (normalizedSection.includes(key)) {
+        sectionCode = code;
+        break;
+      }
+    }
+
+    // Calculate seats per row based on section type
+    let seatsPerRow = 10; // Default
+    if (normalizedSection.includes('vvip') || normalizedSection.includes('vip peat')) {
+      seatsPerRow = 6;
+    } else if (normalizedSection.includes('vip')) {
+      seatsPerRow = 8;
+    } else if (normalizedSection.includes('patron a') || normalizedSection.includes('gold')) {
+      seatsPerRow = 10;
+    } else if (normalizedSection.includes('patron b') || normalizedSection.includes('silver')) {
+      seatsPerRow = 12;
+    } else if (normalizedSection.includes('upper box')) {
+      seatsPerRow = 8;
+    } else if (normalizedSection.includes('lower box')) {
+      seatsPerRow = 10;
+    } else if (normalizedSection.includes('general admission')) {
+      seatsPerRow = 15;
+    }
+
+    // For standing sections, use different logic
+    if (normalizedSection.includes('standing')) {
+      const standingNumber = seatIndex + 1;
+      return `${sectionCode}-${standingNumber.toString().padStart(3, '0')}`;
+    }
+
+    // Calculate row and seat numbers
+    const rowNumber = Math.floor(seatIndex / seatsPerRow) + 1;
+    const seatNumber = (seatIndex % seatsPerRow) + 1;
+
+    // Format: SectionCode + Row + "-" + Seat (e.g., VV1-A1, PA2-B5)
+    const rowLetter = String.fromCharCode(64 + rowNumber); // A, B, C, etc.
+    return `${sectionCode}${rowNumber}-${rowLetter}${seatNumber}`;
+  }
+
+  function getSectionClass(sectionName) {
+    const name = sectionName.toLowerCase().replace(/\s+/g, '-');
+    return `section-${name}`;
+  }
+
+  function createSeatRows(seats, maxSeatsPerRow = 10) {
+    if (seats.length === 0) return '<div class="standing-area"><div class="standing-text">Standing Area</div></div>';
+
+    let html = '<div class="seat-rows">';
+    let currentRow = '<div class="seat-row">';
+    let seatsInCurrentRow = 0;
+
+    seats.forEach((seat, index) => {
+      if (seatsInCurrentRow >= maxSeatsPerRow) {
+        currentRow += '</div>';
+        html += currentRow;
+        currentRow = '<div class="seat-row">';
+        seatsInCurrentRow = 0;
+      }
+
+      const seatStatus = seat[2] || 'available';
+      const seatClass = seatStatus === 'sold' ? 'mini-seat sold' : 'mini-seat';
+      currentRow += `<span class="${seatClass}" title="${seat[1]}"></span>`;
+      seatsInCurrentRow++;
+    });
+
+    // Close the last row
+    if (seatsInCurrentRow > 0) {
+      currentRow += '</div>';
+      html += currentRow;
+    }
+
+    html += '</div>';
+    return html;
+  }
+
+  function isStandingSection(sectionName) {
+    const standingSections = ['floor standing', 'vip standing', 'general admission'];
+    return standingSections.some(standing =>
+      sectionName.toLowerCase().includes(standing.toLowerCase())
+    );
+  }
+
+  function calculateMaxSeatsPerRow(sectionName, totalSeats) {
+    // Different sections have different optimal row sizes
+    const sectionType = sectionName.toLowerCase();
+
+    if (sectionType.includes('vvip') || sectionType.includes('vip peat')) {
+      return Math.min(6, Math.ceil(totalSeats / 2)); // VIP sections: smaller, more intimate
+    } else if (sectionType.includes('vip')) {
+      return Math.min(8, Math.ceil(totalSeats / 2));
+    } else if (sectionType.includes('patron a') || sectionType.includes('gold')) {
+      return Math.min(10, Math.ceil(totalSeats / 3));
+    } else if (sectionType.includes('patron b') || sectionType.includes('silver')) {
+      return Math.min(12, Math.ceil(totalSeats / 4));
+    } else if (sectionType.includes('upper box')) {
+      return Math.min(8, Math.ceil(totalSeats / 3));
+    } else if (sectionType.includes('lower box')) {
+      return Math.min(10, Math.ceil(totalSeats / 3));
+    } else {
+      // General admission and other sections
+      return Math.min(15, Math.ceil(totalSeats / 5));
+    }
+  }
+
+  function renderVenueLayout(categoriesJson) {
+    const venueLayout = document.getElementById('venue-layout');
+    venueLayout.innerHTML = '';
+
+    // Convert to array format for sorting
+    const categoriesArray = Object.entries(categoriesJson).map(([catId, data]) => [
+      [parseInt(catId), data.name],
+      data.seats
+    ]);
+
+    // Sort by typical venue hierarchy
+    const sectionOrder = ['vvip', 'vip peat', 'vip seated', 'vip standing', 'vip', 'floor standing',
+                         'patron a', 'gold', 'lower box', 'patron b', 'silver', 'upper box a',
+                         'upper box b', 'upper box', 'bronze', 'general admission'];
+
+    const sortedCategories = categoriesArray.sort((a, b) => {
+      const aName = a[0][1].toLowerCase();
+      const bName = b[0][1].toLowerCase();
+
+      const aIndex = sectionOrder.findIndex(order => aName.includes(order));
+      const bIndex = sectionOrder.findIndex(order => bName.includes(order));
+
+      // If not found in order, put at end
+      const aPos = aIndex === -1 ? sectionOrder.length : aIndex;
+      const bPos = bIndex === -1 ? sectionOrder.length : bIndex;
+
+      return aPos - bPos;
+    });
+
+    sortedCategories.forEach(([categoryKey, seats]) => {
+      const [catId, catName] = categoryKey;
+      const sectionDiv = document.createElement('div');
+
+      const isStanding = isStandingSection(catName);
+      const sectionClass = getSectionClass(catName);
+
+      sectionDiv.className = `section-visual ${sectionClass} ${isStanding ? 'section-standing' : ''}`;
+
+      let sectionHTML = `<div class="section-label">${catName}</div>`;
+
+      if (isStanding) {
+        sectionHTML += '<div class="standing-area"><div class="standing-text">Standing Area</div></div>';
+      } else {
+        const maxSeatsPerRow = calculateMaxSeatsPerRow(catName, seats.length);
+        sectionHTML += createSeatRows(seats, maxSeatsPerRow);
+      }
+
+      sectionDiv.innerHTML = sectionHTML;
+      venueLayout.appendChild(sectionDiv);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
-    const selectedSeats = new Set();
+    // Generate seat codes for all seat buttons
     const seatButtons = document.querySelectorAll(".seat-btn");
+    seatButtons.forEach(btn => {
+      const sectionName = btn.getAttribute("data-section");
+      const seatIndex = parseInt(btn.getAttribute("data-index"));
+      const totalSeats = parseInt(btn.getAttribute("data-total"));
+
+      const seatCode = generateSeatCode(sectionName, seatIndex, totalSeats);
+      btn.querySelector('.seat-code').textContent = seatCode;
+
+      // Update the data-label attribute with the new code
+      btn.setAttribute("data-label", seatCode);
+    });
+
+    // Get categories data from Flask template - using the JSON-safe version
+    const categoriesJson = {{ categories_json | tojson }};
+
+    // Render the venue layout with actual seat data
+    renderVenueLayout(categoriesJson);
+
+    const selectedSeats = new Set();
 
     function updateSummary() {
       const selectedArray = Array.from(selectedSeats);
@@ -187,18 +665,27 @@
     }
 
     seatButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const seatId = btn.getAttribute("data-id");
-        if (btn.classList.contains("selected")) {
-          btn.classList.remove("selected");
+      btn.addEventListener("click", function () {
+        if (this.classList.contains("sold")) return;
+
+        const seatId = this.getAttribute("data-id");
+
+        if (this.classList.contains("selected")) {
+          this.classList.remove("selected");
+          this.classList.add("available");
           selectedSeats.delete(seatId);
         } else {
-          btn.classList.add("selected");
+          this.classList.remove("available");
+          this.classList.add("selected");
           selectedSeats.add(seatId);
         }
+
         updateSummary();
       });
     });
+
+    // Initialize summary
+    updateSummary();
   });
 </script>
 
