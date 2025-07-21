@@ -146,6 +146,7 @@
         {% if session.get('role') == 'admin' %}
           <a href="/admin/dashboard" {% if 'admin/dashboard' in request.path %}class="active"{% endif %}>Dashboard</a>
           <a href="/admin/add_concert" {% if 'add_concert' in request.path %}class="active"{% endif %}>Add New Concert</a>
+          <a href="/admin/notifications" {% if 'notifications' in request.path %}class="active"{% endif %}>Notifications</a>
         {% elif session.get('role') == 'user' %}
           <a href="/user/dashboard" {% if 'user/dashboard' in request.path %}class="active"{% endif %}>Dashboard</a>
           <a href="/user/tickets" {% if 'user/tickets' in request.path %}class="active"{% endif %}>My Tickets</a>

@@ -133,7 +133,7 @@ def add_concert():
             1: ["VVIP", "VIP", "Patron A", "Patron B", "General Admission"],
             2: ["Floor Standing", "VIP Standing", "Lower Box", "Upper Box", "General Admission"],
             3: ["VVIP", "VIP Seated", "Gold", "Silver", "Bronze"],
-            4: ["VIP PEAT", "Patron A", "Patron B", "Upper Box A", "Upper Box B"]
+            4: ["VIP PIT", "Patron A", "Patron B", "Upper Box A", "Upper Box B"]
         }
 
         for cat in layouts.get(layout, []):
@@ -370,15 +370,36 @@ def user_tickets():
 def admin_notifications():
     cur = mysql.connection.cursor()
     cur.execute("""
-        SELECT n.id, u.username, c.name, n.created_at
+        SELECT 
+            n.id,
+            u.username,
+            c.name AS concert_name,
+            o.total_price
         FROM notifications n
         JOIN users u ON n.user_id = u.id
         JOIN concerts c ON n.concert_id = c.id
+        JOIN orders o ON n.order_id = o.id
         ORDER BY n.created_at DESC
     """)
     notifications = cur.fetchall()
     cur.close()
     return render_template('admin_notifications.html', notifications=notifications)
+# ==================== ROUTE FOR ADMIN TO SEE USER PURCHASES ====================
+@app.route('/admin/purchases')
+@login_required(role='admin')
+def admin_purchases():
+    cur = mysql.connection.cursor()
+
+    cur.execute("""
+        SELECT o.id, u.username, c.name AS concert_name, o.total_price
+        FROM orders o
+        JOIN users u ON o.user_id = u.id
+        JOIN concerts c ON o.concert_id = c.id
+        ORDER BY o.id DESC
+    """)
+    notifications = cur.fetchall()
+    return render_template('admin_notifications.html', notifications=notifications)
+
 # ==================== ADMIN: VIEW ALL CONCERTS ====================
 @app.route('/admin/concerts')
 @login_required(role='admin')
@@ -431,11 +452,39 @@ def mark_concert_done(concert_id):
     return redirect('/admin/dashboard')
 
 
+# ==================== CHECKOUT FORM ====================
+@app.route('/checkout/<int:concert_id>', methods=['POST'])
+@login_required(role='user')
+def checkout(concert_id):
+    seats_raw = request.form.get('seats')
+    if not seats_raw:
+        flash("No seats selected.", "danger")
+        return redirect(f'/book/{concert_id}')
 
+    selected_seats = seats_raw.split(',')
 
+    cur = mysql.connection.cursor()
+    format_strings = ','.join(['%s'] * len(selected_seats))
+    cur.execute(f"""
+        SELECT seats.id, seats.label, categories.price, categories.name
+        FROM seats
+        JOIN categories ON seats.category_id = categories.id
+        WHERE seats.id IN ({format_strings}) AND seats.status = 'available'
+    """, tuple(selected_seats))
+    valid_seats = cur.fetchall()
 
+    if len(valid_seats) != len(selected_seats):
+        flash("Some seats are no longer available.", "danger")
+        return redirect(f'/book/{concert_id}')
 
+    total_price = sum(seat[2] for seat in valid_seats)
+    cur.close()
 
+    return render_template('checkout.html',
+                           concert_id=concert_id,
+                           seats=valid_seats,
+                           total=total_price,
+                           selected_seat_ids=seats_raw)
 
 
 # ==================== RUN APP ====================

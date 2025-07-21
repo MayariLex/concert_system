@@ -1,0 +1,5 @@
+Flask
+Flask-MySQLdb
+Werkzeug
+Flask-Mail
+Flask-WTF

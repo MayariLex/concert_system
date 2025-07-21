@@ -1,24 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>🔔 Purchase Notifications</h2>
+
+<h2 class="text-center mb-4" style="color: #d3adf7;">Admin Notifications</h2>
+
 {% if notifications %}
-<table border="1" cellpadding="8">
-  <tr>
-    <th>#</th>
-    <th>User</th>
-    <th>Concert</th>
-    <th>Time</th>
-  </tr>
-  {% for nid, uname, concert, time in notifications %}
-  <tr>
-    <td>{{ nid }}</td>
-    <td>{{ uname }}</td>
-    <td>{{ concert }}</td>
-    <td>{{ time }}</td>
-  </tr>
-  {% endfor %}
-</table>
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; background: #111; border-radius: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(142, 68, 173, 0.3);">
+      <thead style="background: linear-gradient(135deg, #8e44ad, #e91e63); color: white;">
+        <tr>
+          <th style="padding: 12px; text-align: left;">Order ID</th>
+          <th style="padding: 12px; text-align: left;">Username</th>
+          <th style="padding: 12px; text-align: left;">Concert</th>
+          <th style="padding: 12px; text-align: left;">Total Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for oid, username, concert_name, total_price in notifications %}
+        <tr style="border-bottom: 1px solid #333;">
+          <td style="padding: 12px; color: white;">{{ oid }}</td>
+          <td style="padding: 12px; color: #d3adf7;">{{ username }}</td>
+          <td style="padding: 12px; color: white;">{{ concert_name }}</td>
+          <td style="padding: 12px; color: #2ecc71;">₱{{ total_price }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% else %}
-  <p>No notifications yet.</p>
+  <p style="text-align: center; color: #aaa;">No notifications at the moment.</p>
 {% endif %}
+
 {% endblock %}

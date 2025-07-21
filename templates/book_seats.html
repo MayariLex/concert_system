@@ -13,12 +13,15 @@
   <div class="layout-section">
     <h5 class="text-center mb-3" style="color: #d3adf7;">Venue Layout</h5>
 
-    <!-- Mini Stage -->
-    <div class="mini-stage">STAGE</div>
+    <!-- Arena-style venue layout -->
+    <div class="arena-container">
+      <!-- Stage -->
+      <div class="arena-stage">STAGE</div>
 
-    <!-- Visual seat arrangement - dynamically populated -->
-    <div class="venue-layout" id="venue-layout">
-      <!-- Will be populated by JavaScript based on layout -->
+      <!-- Venue Layout -->
+      <div class="venue-layout" id="venue-layout">
+        <!-- Will be populated by JavaScript based on layout -->
+      </div>
     </div>
   </div>
 </div>
@@ -29,9 +32,6 @@
   <span class="legend-item"><span class="box selected"></span> Selected</span>
   <span class="legend-item"><span class="box sold"></span> Sold</span>
 </div>
-
-<!-- Stage -->
-
 
 <form method="POST" action="{{ url_for('purchase', concert_id=concert_id) }}">
   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -82,6 +82,7 @@
 </form>
 
 <!-- Style -->
+<!-- Style -->
 <style>
   body {
     background-color: #000 !important;
@@ -104,222 +105,225 @@
 
   .layout-section {
     flex: 0 0 auto;
-    min-width: 250px;
-    max-width: 300px;
+    min-width: 400px; /* Reduced from 500px */
+    max-width: 480px; /* Reduced from 600px */
   }
 
-  /* Mini Stage */
-  .mini-stage {
-    background: linear-gradient(135deg, #8e44ad, #e91e63);
+  /* Arena Container - Made smaller and more compact */
+  .arena-container {
+    background: linear-gradient(135deg, #2c1810, #1a1a2e);
+    border: 2px solid #8e44ad;
+    border-radius: 16px;
+    padding: 20px; /* Reduced from 30px */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(142, 68, 173, 0.3);
+    max-width: 450px; /* Added max-width to constrain size */
+    margin: 0 auto; /* Center the container */
+  }
+
+  /* Arena Stage - Made more compact */
+  .arena-stage {
+    background: linear-gradient(135deg, #e91e63, #8e44ad);
     color: white;
     text-align: center;
-    padding: 8px;
+    padding: 12px; /* Reduced from 18px */
     font-weight: bold;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    font-size: 12px;
-    letter-spacing: 2px;
-    box-shadow: 0 0 8px rgba(142, 68, 173, 0.4);
+    margin-bottom: 20px; /* Reduced from 25px */
+    border-radius: 12px;
+    font-size: 16px; /* Reduced from 18px */
+    letter-spacing: 3px; /* Reduced from 4px */
+    box-shadow: 0 0 25px rgba(233, 30, 99, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    position: relative;
+    z-index: 10;
+    text-transform: uppercase;
   }
 
-  /* Venue Layout */
+  /* Arena Layout - More compact spacing */
   .venue-layout {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    gap: 8px; /* Reduced from 12px */
+    position: relative;
+    min-height: 300px; /* Reduced from 400px */
   }
 
-  .section-visual {
-    border: 1px solid #555;
-    border-radius: 8px;
-    padding: 10px;
+  /* Arena Sections - Made smaller */
+  .arena-section {
+    position: relative;
+    margin: 2px; /* Reduced from 4px */
+    border-radius: 10px; /* Reduced from 12px */
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .arena-section:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+  }
+
+  .section-block {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1px;
+    padding: 8px; /* Reduced from 12px */
+    border-radius: 8px; /* Reduced from 10px */
+    min-height: 35px; /* Reduced from 45px */
     position: relative;
   }
 
   .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: #d3adf7;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px; /* Reduced from 12px */
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+    z-index: 5;
+    pointer-events: none;
     text-align: center;
-    margin-bottom: 8px;
+    line-height: 1.2;
+    letter-spacing: 0.5px; /* Reduced from 1px */
     text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .seat-rows {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: center;
-  }
-
-  .seat-row {
-    display: flex;
-    gap: 3px;
-    justify-content: center;
+    white-space: nowrap;
   }
 
   .mini-seat {
-    width: 12px;
-    height: 12px;
-    background-color: #666;
-    border-radius: 2px;
+    width: 3px; /* Reduced from 4px */
+    height: 3px; /* Reduced from 4px */
+    border-radius: 1.5px; /* Reduced from 2px */
     display: inline-block;
-    border: 1px solid #999;
-    transition: all 0.2s ease;
+    margin: 0.3px; /* Reduced from 0.5px */
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   }
 
   .mini-seat.sold {
-    background-color: #e74c3c !important;
-    border-color: #c0392b !important;
-    opacity: 0.7;
+    opacity: 0.3 !important;
+    background-color: #444 !important;
   }
 
-  /* Section-specific styling */
+  /* Layout Structure - More compact */
+  .layout-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 6px; /* Reduced from 8px */
+    gap: 10px; /* Reduced from 15px */
+  }
+
+  .side-sections {
+    display: flex;
+    gap: 8px; /* Reduced from 10px */
+  }
+
+  .center-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* Section-specific styling with improved colors */
   .section-vvip {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 193, 7, 0.15));
-    border-color: #ffd700;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    border-color: #ff6b35;
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.4);
   }
   .section-vvip .mini-seat {
-    background-color: #ffd700;
-    border-color: #ffed4e;
+    background-color: #ff6b35;
+    box-shadow: 0 0 4px rgba(255, 107, 53, 0.7);
   }
 
-  .section-vip, .section-vip-seated {
-    background: linear-gradient(135deg, rgba(255, 99, 71, 0.1), rgba(255, 69, 0, 0.1));
-    border-color: #ff6347;
+  .section-vip-pit, .section-vip-peat {
+    background: linear-gradient(135deg, #e91e63, #ad1457);
+    border-color: #e91e63;
+    box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
   }
-  .section-vip .mini-seat, .section-vip-seated .mini-seat {
-    background-color: #ff6347;
-    border-color: #ff7f50;
-  }
-
-  .section-patron-a {
-    background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
-    border-color: #2ecc71;
-  }
-  .section-patron-a .mini-seat {
-    background-color: #2ecc71;
-    border-color: #58d68d;
+  .section-vip-pit .mini-seat, .section-vip-peat .mini-seat {
+    background-color: #e91e63;
+    box-shadow: 0 0 4px rgba(233, 30, 99, 0.7);
   }
 
-  .section-patron-b {
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1));
-    border-color: #3498db;
+  .section-vip, .section-vip-seated, .section-vip-standing {
+    background: linear-gradient(135deg, #8e44ad, #6a1b9a);
+    border-color: #8e44ad;
+    box-shadow: 0 0 20px rgba(142, 68, 173, 0.4);
   }
-  .section-patron-b .mini-seat {
-    background-color: #3498db;
-    border-color: #5dade2;
-  }
-
-  .section-general-admission {
-    background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
-    border-color: #9b59b6;
-  }
-  .section-general-admission .mini-seat {
-    background-color: #9b59b6;
-    border-color: #af7ac5;
+  .section-vip .mini-seat, .section-vip-seated .mini-seat, .section-vip-standing .mini-seat {
+    background-color: #8e44ad;
+    box-shadow: 0 0 4px rgba(142, 68, 173, 0.7);
   }
 
-  .section-floor-standing {
-    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(192, 57, 43, 0.1));
-    border-color: #e74c3c;
+  .section-patron-a, .section-gold {
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    border-color: #ff9800;
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.4);
   }
-  .section-floor-standing .mini-seat {
-    background-color: #e74c3c;
-    border-color: #ec7063;
+  .section-patron-a .mini-seat, .section-gold .mini-seat {
+    background-color: #ff9800;
+    box-shadow: 0 0 4px rgba(255, 152, 0, 0.7);
   }
 
-  .section-vip-standing {
-    background: linear-gradient(135deg, rgba(230, 126, 34, 0.1), rgba(211, 84, 0, 0.1));
-    border-color: #e67e22;
+  .section-patron-b, .section-silver {
+    background: linear-gradient(135deg, #3f51b5, #303f9f);
+    border-color: #3f51b5;
+    box-shadow: 0 0 20px rgba(63, 81, 181, 0.4);
   }
-  .section-vip-standing .mini-seat {
-    background-color: #e67e22;
-    border-color: #f39c12;
+  .section-patron-b .mini-seat, .section-silver .mini-seat {
+    background-color: #3f51b5;
+    box-shadow: 0 0 4px rgba(63, 81, 181, 0.7);
   }
 
   .section-lower-box {
-    background: linear-gradient(135deg, rgba(26, 188, 156, 0.1), rgba(22, 160, 133, 0.1));
-    border-color: #1abc9c;
+    background: linear-gradient(135deg, #4caf50, #388e3c);
+    border-color: #4caf50;
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.4);
   }
   .section-lower-box .mini-seat {
-    background-color: #1abc9c;
-    border-color: #48c9b0;
+    background-color: #4caf50;
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.7);
   }
 
   .section-upper-box, .section-upper-box-a, .section-upper-box-b {
-    background: linear-gradient(135deg, rgba(52, 73, 94, 0.1), rgba(44, 62, 80, 0.1));
-    border-color: #34495e;
+    background: linear-gradient(135deg, #795548, #5d4037);
+    border-color: #795548;
+    box-shadow: 0 0 20px rgba(121, 85, 72, 0.4);
   }
   .section-upper-box .mini-seat, .section-upper-box-a .mini-seat, .section-upper-box-b .mini-seat {
-    background-color: #34495e;
-    border-color: #5d6d7e;
+    background-color: #795548;
+    box-shadow: 0 0 4px rgba(121, 85, 72, 0.7);
   }
 
-  .section-gold {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(218, 165, 32, 0.1));
-    border-color: #daa520;
+  .section-floor-standing {
+    background: linear-gradient(135deg, #f06292, #e91e63);
+    border-color: #f06292;
+    box-shadow: 0 0 20px rgba(240, 98, 146, 0.4);
   }
-  .section-gold .mini-seat {
-    background-color: #daa520;
-    border-color: #f1c40f;
-  }
-
-  .section-silver {
-    background: linear-gradient(135deg, rgba(192, 192, 192, 0.1), rgba(169, 169, 169, 0.1));
-    border-color: #c0c0c0;
-  }
-  .section-silver .mini-seat {
-    background-color: #c0c0c0;
-    border-color: #d5d5d5;
+  .section-floor-standing .mini-seat {
+    background-color: #f06292;
+    box-shadow: 0 0 4px rgba(240, 98, 146, 0.7);
   }
 
-  .section-bronze {
-    background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(184, 115, 51, 0.1));
-    border-color: #cd7f32;
+  .section-bronze, .section-general-admission {
+    background: linear-gradient(135deg, #00bcd4, #0097a7);
+    border-color: #00bcd4;
+    box-shadow: 0 0 20px rgba(0, 188, 212, 0.4);
   }
-  .section-bronze .mini-seat {
-    background-color: #cd7f32;
-    border-color: #d2691e;
-  }
-
-  .section-vip-peat {
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.1));
-    border-color: #ffd700;
-  }
-  .section-vip-peat .mini-seat {
-    background-color: #ffd700;
-    border-color: #ffed4e;
+  .section-bronze .mini-seat, .section-general-admission .mini-seat {
+    background-color: #00bcd4;
+    box-shadow: 0 0 4px rgba(0, 188, 212, 0.7);
   }
 
-  /* Standing sections styling */
-  .section-standing {
-    padding: 15px;
-    text-align: center;
-  }
-
-  .section-standing .standing-area {
-    background: repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.05),
-      rgba(255, 255, 255, 0.05) 10px,
-      transparent 10px,
-      transparent 20px
-    );
-    border-radius: 6px;
-    padding: 20px;
-    margin: 5px 0;
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-  }
-
-  .section-standing .standing-text {
-    font-size: 10px;
-    color: #ccc;
-    font-style: italic;
-  }
-
-  /* Responsive adjustments */
+  /* Responsive adjustments for smaller screens */
   @media (max-width: 768px) {
     .poster-layout-container {
       flex-direction: column;
@@ -328,8 +332,25 @@
     }
 
     .layout-section {
-      min-width: 200px;
-      max-width: 250px;
+      min-width: 300px; /* Reduced from 320px */
+      max-width: 360px; /* Reduced from 380px */
+    }
+
+    .arena-container {
+      padding: 15px; /* Reduced from 20px */
+      max-width: 350px;
+    }
+
+    .layout-row {
+      gap: 6px; /* Reduced from 8px */
+    }
+
+    .side-sections {
+      gap: 4px; /* Reduced from 5px */
+    }
+
+    .venue-layout {
+      min-height: 250px; /* Reduced for mobile */
     }
   }
 
@@ -392,19 +413,6 @@
     text-align: center;
   }
 
-  .stage {
-    background-color: #8e44ad;
-    color: white;
-    text-align: center;
-    padding: 12px;
-    font-weight: bold;
-    margin: 30px auto;
-    width: 60%;
-    border-radius: 10px;
-    letter-spacing: 3px;
-    box-shadow: 0 0 10px rgba(142, 68, 173, 0.5);
-  }
-
   .legend {
     display: flex;
     justify-content: center;
@@ -442,10 +450,10 @@
 <script>
   // Generate code-based seat names
   function generateSeatCode(sectionName, seatIndex, totalSeats) {
-    // Define section codes based on section names
     const sectionCodes = {
       'vvip': 'VV',
       'vip peat': 'VP',
+      'vip pit': 'VP',
       'vip seated': 'VS',
       'vip standing': 'VT',
       'vip': 'V',
@@ -462,11 +470,9 @@
       'general admission': 'GA'
     };
 
-    // Get section code
     const normalizedSection = sectionName.toLowerCase();
-    let sectionCode = 'GEN'; // Default code
+    let sectionCode = 'GEN';
 
-    // Find matching section code
     for (const [key, code] of Object.entries(sectionCodes)) {
       if (normalizedSection.includes(key)) {
         sectionCode = code;
@@ -475,8 +481,8 @@
     }
 
     // Calculate seats per row based on section type
-    let seatsPerRow = 10; // Default
-    if (normalizedSection.includes('vvip') || normalizedSection.includes('vip peat')) {
+    let seatsPerRow = 10;
+    if (normalizedSection.includes('vvip') || normalizedSection.includes('vip peat') || normalizedSection.includes('vip pit')) {
       seatsPerRow = 6;
     } else if (normalizedSection.includes('vip')) {
       seatsPerRow = 8;
@@ -492,18 +498,14 @@
       seatsPerRow = 15;
     }
 
-    // For standing sections, use different logic
     if (normalizedSection.includes('standing')) {
       const standingNumber = seatIndex + 1;
       return `${sectionCode}-${standingNumber.toString().padStart(3, '0')}`;
     }
 
-    // Calculate row and seat numbers
     const rowNumber = Math.floor(seatIndex / seatsPerRow) + 1;
     const seatNumber = (seatIndex % seatsPerRow) + 1;
-
-    // Format: SectionCode + Row + "-" + Seat (e.g., VV1-A1, PA2-B5)
-    const rowLetter = String.fromCharCode(64 + rowNumber); // A, B, C, etc.
+    const rowLetter = String.fromCharCode(64 + rowNumber);
     return `${sectionCode}${rowNumber}-${rowLetter}${seatNumber}`;
   }
 
@@ -512,116 +514,226 @@
     return `section-${name}`;
   }
 
-  function createSeatRows(seats, maxSeatsPerRow = 10) {
-    if (seats.length === 0) return '<div class="standing-area"><div class="standing-text">Standing Area</div></div>';
+  function createArenaSection(sectionName, seats, width = 120, height = 50) {
+    const sectionClass = getSectionClass(sectionName);
+    const totalSeats = seats.length;
+    const seatsToShow = Math.min(totalSeats, Math.floor((width * height) / 20));
 
-    let html = '<div class="seat-rows">';
-    let currentRow = '<div class="seat-row">';
-    let seatsInCurrentRow = 0;
+    let html = `<div class="arena-section ${sectionClass}" style="width: ${width}px; height: ${height}px; position: relative;">`;
+    html += `<div class="section-block">`;
 
-    seats.forEach((seat, index) => {
-      if (seatsInCurrentRow >= maxSeatsPerRow) {
-        currentRow += '</div>';
-        html += currentRow;
-        currentRow = '<div class="seat-row">';
-        seatsInCurrentRow = 0;
-      }
+    const rows = Math.ceil(Math.sqrt(seatsToShow / 1.5));
+    const seatsPerRow = Math.ceil(seatsToShow / rows);
 
+    for (let i = 0; i < seatsToShow; i++) {
+      const seat = seats[i] || ['', '', 'available'];
       const seatStatus = seat[2] || 'available';
       const seatClass = seatStatus === 'sold' ? 'mini-seat sold' : 'mini-seat';
-      currentRow += `<span class="${seatClass}" title="${seat[1]}"></span>`;
-      seatsInCurrentRow++;
-    });
-
-    // Close the last row
-    if (seatsInCurrentRow > 0) {
-      currentRow += '</div>';
-      html += currentRow;
+      html += `<span class="${seatClass}"></span>`;
     }
 
-    html += '</div>';
+    html += `</div>`;
+    html += `<div class="section-label">${sectionName.toUpperCase()}</div>`;
+    html += `</div>`;
+
     return html;
   }
 
-  function isStandingSection(sectionName) {
-    const standingSections = ['floor standing', 'vip standing', 'general admission'];
-    return standingSections.some(standing =>
-      sectionName.toLowerCase().includes(standing.toLowerCase())
-    );
-  }
-
-  function calculateMaxSeatsPerRow(sectionName, totalSeats) {
-    // Different sections have different optimal row sizes
-    const sectionType = sectionName.toLowerCase();
-
-    if (sectionType.includes('vvip') || sectionType.includes('vip peat')) {
-      return Math.min(6, Math.ceil(totalSeats / 2)); // VIP sections: smaller, more intimate
-    } else if (sectionType.includes('vip')) {
-      return Math.min(8, Math.ceil(totalSeats / 2));
-    } else if (sectionType.includes('patron a') || sectionType.includes('gold')) {
-      return Math.min(10, Math.ceil(totalSeats / 3));
-    } else if (sectionType.includes('patron b') || sectionType.includes('silver')) {
-      return Math.min(12, Math.ceil(totalSeats / 4));
-    } else if (sectionType.includes('upper box')) {
-      return Math.min(8, Math.ceil(totalSeats / 3));
-    } else if (sectionType.includes('lower box')) {
-      return Math.min(10, Math.ceil(totalSeats / 3));
-    } else {
-      // General admission and other sections
-      return Math.min(15, Math.ceil(totalSeats / 5));
-    }
-  }
-
-  function renderVenueLayout(categoriesJson) {
+   function renderArenaLayout(categoriesJson) {
     const venueLayout = document.getElementById('venue-layout');
-    venueLayout.innerHTML = '';
+    const sections = {};
 
-    // Convert to array format for sorting
-    const categoriesArray = Object.entries(categoriesJson).map(([catId, data]) => [
-      [parseInt(catId), data.name],
-      data.seats
-    ]);
-
-    // Sort by typical venue hierarchy
-    const sectionOrder = ['vvip', 'vip peat', 'vip seated', 'vip standing', 'vip', 'floor standing',
-                         'patron a', 'gold', 'lower box', 'patron b', 'silver', 'upper box a',
-                         'upper box b', 'upper box', 'bronze', 'general admission'];
-
-    const sortedCategories = categoriesArray.sort((a, b) => {
-      const aName = a[0][1].toLowerCase();
-      const bName = b[0][1].toLowerCase();
-
-      const aIndex = sectionOrder.findIndex(order => aName.includes(order));
-      const bIndex = sectionOrder.findIndex(order => bName.includes(order));
-
-      // If not found in order, put at end
-      const aPos = aIndex === -1 ? sectionOrder.length : aIndex;
-      const bPos = bIndex === -1 ? sectionOrder.length : bIndex;
-
-      return aPos - bPos;
+    Object.entries(categoriesJson).forEach(([catId, data]) => {
+      sections[data.name.toLowerCase()] = data.seats;
     });
 
-    sortedCategories.forEach(([categoryKey, seats]) => {
-      const [catId, catName] = categoryKey;
-      const sectionDiv = document.createElement('div');
+    let html = '';
+    const s = sections;
 
-      const isStanding = isStandingSection(catName);
-      const sectionClass = getSectionClass(catName);
+    const hasPeat = !!s['vip peat'];
+    const hasFloor = !!s['floor standing'];
+    const hasSeated = !!s['vip seated'];
+    const hasPit = !!s['vip pit'];
 
-      sectionDiv.className = `section-visual ${sectionClass} ${isStanding ? 'section-standing' : ''}`;
+    if (hasPeat) {
+      html = renderTraditionalLayout(s);    // Layout 1
+    } else if (hasFloor) {
+      html = renderStandingLayout(s);       // Layout 2
+    } else if (hasSeated) {
+      html = renderLayoutThree(s);          // Layout 3
+    } else if (hasPit) {
+      html = renderLayoutFour(s);           // Layout 4
+    } else {
+      html = renderDefaultLayout(s);        // fallback
+    }
 
-      let sectionHTML = `<div class="section-label">${catName}</div>`;
+    venueLayout.innerHTML = html;
+  }
 
-      if (isStanding) {
-        sectionHTML += '<div class="standing-area"><div class="standing-text">Standing Area</div></div>';
-      } else {
-        const maxSeatsPerRow = calculateMaxSeatsPerRow(catName, seats.length);
-        sectionHTML += createSeatRows(seats, maxSeatsPerRow);
+  // ── FIXED: Layout 3 (VVIP → VIP Seated → Gold → Silver → Bronze) ──
+  function renderLayoutThree(s) {
+    let html = '';
+    // CORRECTED ORDER: Most premium to least premium
+    const order = ['vvip','vip seated','gold','silver','bronze'];
+    order.forEach(name => {
+      if (s[name]) {
+        html += '<div class="layout-row">' +
+                  createArenaSection(name.charAt(0).toUpperCase()+name.slice(1), s[name], 180, 50) +
+                '</div>';
+      }
+    });
+    return html;
+  }
+
+  // ── FIXED: Layout 4 (VIP PIT → Patron A → Patron B → Upper Box A → Upper Box B) ──
+  function renderLayoutFour(s) {
+    let html = '';
+    // CORRECTED ORDER: Most premium to least premium
+    const order = ['vip pit','patron a','patron b','upper box a','upper box b'];
+    order.forEach(name => {
+      if (s[name]) {
+        html += '<div class="layout-row">' +
+                  createArenaSection(name.charAt(0).toUpperCase()+name.slice(1), s[name], 180, 50) +
+                '</div>';
+      }
+    });
+    return html;
+  }
+
+  // ── FIXED: Layout 1 Traditional (VVIP → VIP → Patron A → Patron B → General Admission) ──
+  function renderTraditionalLayout(sections) {
+    let html = '';
+
+    // CORRECTED: Start with most premium sections closest to stage
+    // VVIP and VIP sections first (closest to stage)
+    html += '<div class="layout-row">';
+    if (sections['vvip']) {
+      html += createArenaSection('VVIP', sections['vvip'], 180, 55);
+    }
+    if (sections['vip peat']) {
+      html += createArenaSection('VIP Peat', sections['vip peat'], 180, 55);
+    }
+    if (sections['vip']) {
+      html += createArenaSection('VIP', sections['vip'], 180, 55);
+    }
+    html += '</div>';
+
+    // Middle tier with side sections (Patron levels)
+    html += '<div class="layout-row">';
+    html += '<div class="side-sections">';
+    if (sections['patron a']) {
+      html += createArenaSection('Patron A', sections['patron a'], 100, 55);
+    }
+    html += '</div>';
+
+    html += '<div class="center-section">';
+    // Center space or additional premium seating
+    html += '</div>';
+
+    html += '<div class="side-sections">';
+    if (sections['patron b']) {
+      html += createArenaSection('Patron B', sections['patron b'], 100, 55);
+    }
+    html += '</div>';
+    html += '</div>';
+
+    // Upper tier (furthest from stage)
+    html += '<div class="layout-row">';
+    if (sections['upper box a']) {
+      html += createArenaSection('Upper Box A', sections['upper box a'], 120, 45);
+    }
+    if (sections['upper box b']) {
+      html += createArenaSection('Upper Box B', sections['upper box b'], 120, 45);
+    }
+    if (sections['upper box']) {
+      html += createArenaSection('Upper Box', sections['upper box'], 150, 45);
+    }
+    if (sections['general admission']) {
+      html += createArenaSection('General Admission', sections['general admission'], 200, 45);
+    }
+    html += '</div>';
+
+    return html;
+  }
+
+  // ── FIXED: Layout 2 Standing (Floor Standing → VIP Standing → Lower Box → Upper Box → General Admission) ──
+  function renderStandingLayout(sections) {
+    let html = '';
+
+    // CORRECTED: Most premium standing areas first (closest to stage)
+    html += '<div class="layout-row">';
+    if (sections['floor standing']) {
+      html += createArenaSection('Floor Standing', sections['floor standing'], 140, 60);
+    }
+    if (sections['vip standing']) {
+      html += createArenaSection('VIP Standing', sections['vip standing'], 140, 60);
+    }
+    html += '</div>';
+
+    // Lower box (elevated but closer)
+    if (sections['lower box']) {
+      html += '<div class="layout-row">';
+      html += createArenaSection('Lower Box', sections['lower box'], 220, 50);
+      html += '</div>';
+    }
+
+    // Upper level (furthest from stage)
+    if (sections['upper box']) {
+      html += '<div class="layout-row">';
+      html += createArenaSection('Upper Box', sections['upper box'], 200, 45);
+      html += '</div>';
+    }
+
+    // General admission (least premium)
+    if (sections['general admission']) {
+      html += '<div class="layout-row">';
+      html += createArenaSection('General Admission', sections['general admission'], 300, 50);
+      html += '</div>';
+    }
+
+    return html;
+  }
+
+  function renderDefaultLayout(sections) {
+    let html = '';
+
+    // Create a flexible layout based on available sections
+    // Sort sections by premium level for default layout
+    const premiumOrder = [
+      'vvip', 'vip peat', 'vip pit', 'vip seated', 'vip standing', 'vip',
+      'floor standing', 'patron a', 'gold', 'patron b', 'silver',
+      'lower box', 'bronze', 'upper box a', 'upper box b', 'upper box',
+      'general admission'
+    ];
+
+    const sortedSections = [];
+    premiumOrder.forEach(sectionKey => {
+      if (sections[sectionKey]) {
+        sortedSections.push([sectionKey, sections[sectionKey]]);
+      }
+    });
+
+    // Add any remaining sections not in the premium order
+    Object.entries(sections).forEach(([sectionName, seats]) => {
+      if (!premiumOrder.includes(sectionName)) {
+        sortedSections.push([sectionName, seats]);
+      }
+    });
+
+    const sectionsPerRow = 3;
+    for (let i = 0; i < sortedSections.length; i += sectionsPerRow) {
+      html += '<div class="layout-row">';
+
+      for (let j = i; j < Math.min(i + sectionsPerRow, sortedSections.length); j++) {
+        const [sectionName, seats] = sortedSections[j];
+        const width = sortedSections.length <= 3 ? 150 : 120;
+        html += createArenaSection(sectionName, seats, width, 50);
       }
 
-      sectionDiv.innerHTML = sectionHTML;
-      venueLayout.appendChild(sectionDiv);
-    });
+      html += '</div>';
+    }
+
+    return html;
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -634,16 +746,14 @@
 
       const seatCode = generateSeatCode(sectionName, seatIndex, totalSeats);
       btn.querySelector('.seat-code').textContent = seatCode;
-
-      // Update the data-label attribute with the new code
       btn.setAttribute("data-label", seatCode);
     });
 
-    // Get categories data from Flask template - using the JSON-safe version
+    // Get categories data from Flask template
     const categoriesJson = {{ categories_json | tojson }};
 
-    // Render the venue layout with actual seat data
-    renderVenueLayout(categoriesJson);
+    // Render the venue layout
+    renderArenaLayout(categoriesJson);
 
     const selectedSeats = new Set();
 
@@ -684,7 +794,6 @@
       });
     });
 
-    // Initialize summary
     updateSummary();
   });
 </script>
